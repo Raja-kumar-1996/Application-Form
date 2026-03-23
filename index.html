@@ -1,1 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>README Generator</title>
 
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Markdown Library -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- Form Section -->
+  <div class="form">
+    <h2>Application Form</h2>
+
+    <input id="name" placeholder="Your Name">
+    <input id="project" placeholder="Project Title">
+    <textarea id="desc" placeholder="Description"></textarea>
+    <input id="tech" placeholder="Technologies (comma separated)">
+    <textarea id="features" placeholder="Features (comma separated)"></textarea>
+    <input id="github" placeholder="GitHub Link">
+
+    <button onclick="copyMarkdown()">Copy README</button>
+  </div>
+
+  <!-- Preview Section -->
+  <div class="preview" id="preview"></div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
