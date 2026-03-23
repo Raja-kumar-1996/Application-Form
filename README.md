@@ -2,116 +2,116 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dynamic README Generator</title>
+  <title>README Generator</title>
+
+  <!-- Marked.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
+      font-family: Arial;
       display: flex;
       height: 100vh;
     }
-    .container {
-      display: flex;
-      width: 100%;
-    }
-    .form-section, .preview-section {
+
+    .form, .preview {
       width: 50%;
       padding: 20px;
       overflow-y: auto;
     }
-    .form-section {
-      background: #f4f4f4;
+
+    .form {
+      background: #f5f5f5;
     }
-    .preview-section {
-      background: #1e1e1e;
-      color: #fff;
-      white-space: pre-wrap;
+
+    .preview {
+      background: #ffffff;
+      border-left: 2px solid #ddd;
     }
+
     input, textarea {
       width: 100%;
       margin-bottom: 10px;
       padding: 8px;
     }
+
     button {
       padding: 10px;
-      background: #007acc;
+      background: black;
       color: white;
       border: none;
       cursor: pointer;
     }
-    button:hover {
-      background: #005f99;
-    }
+
+    /* GitHub-like styling */
+    .preview h1 { border-bottom: 2px solid #ddd; }
+    .preview ul { padding-left: 20px; }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <!-- Form Section -->
-  <div class="form-section">
-    <h2>Application Form</h2>
-    
-    <input type="text" id="name" placeholder="Your Name">
-    <input type="text" id="project" placeholder="Project Name">
-    <textarea id="description" placeholder="Project Description"></textarea>
-    <input type="text" id="tech" placeholder="Technologies Used (comma separated)">
-    <textarea id="features" placeholder="Features (comma separated)"></textarea>
-    <input type="text" id="github" placeholder="GitHub Link">
+<div class="form">
+  <h2>Fill Application</h2>
 
-    <button onclick="copyReadme()">Copy README</button>
-  </div>
+  <input id="name" placeholder="Your Name">
+  <input id="project" placeholder="Project Title">
+  <textarea id="desc" placeholder="Description"></textarea>
+  <input id="tech" placeholder="Technologies (comma separated)">
+  <textarea id="features" placeholder="Features (comma separated)"></textarea>
+  <input id="github" placeholder="GitHub Link">
 
-  <!-- Preview Section -->
-  <div class="preview-section" id="preview">
-    Your README will appear here...
-  </div>
+  <button onclick="copyMarkdown()">Copy Markdown</button>
 </div>
 
+<div class="preview" id="preview"></div>
+
 <script>
-  const inputs = document.querySelectorAll("input, textarea");
-  const preview = document.getElementById("preview");
+const inputs = document.querySelectorAll("input, textarea");
 
-  inputs.forEach(input => {
-    input.addEventListener("input", generateReadme);
-  });
+inputs.forEach(input => input.addEventListener("input", update));
 
-  function generateReadme() {
-    const name = document.getElementById("name").value;
-    const project = document.getElementById("project").value;
-    const description = document.getElementById("description").value;
-    const tech = document.getElementById("tech").value.split(",");
-    const features = document.getElementById("features").value.split(",");
-    const github = document.getElementById("github").value;
+function update() {
+  const name = document.getElementById("name").value;
+  const project = document.getElementById("project").value;
+  const desc = document.getElementById("desc").value;
+  const tech = document.getElementById("tech").value.split(",");
+  const features = document.getElementById("features").value.split(",");
+  const github = document.getElementById("github").value;
 
-    const techList = tech.map(t => `- ${t.trim()}`).join("\n");
-    const featureList = features.map(f => `- ${f.trim()}`).join("\n");
-
-    const readme = `
+  const markdown = `
 # ${project || "Project Title"}
 
 ## 👤 Author
 ${name || "Your Name"}
 
 ## 📖 Description
-${description || "Project description goes here."}
+${desc || "Write something..."}
 
-## 🛠️ Technologies Used
-${techList || "- Tech 1"}
+## 🛠️ Technologies
+${tech.map(t => `- ${t.trim()}`).join("\n")}
 
 ## ✨ Features
-${featureList || "- Feature 1"}
+${features.map(f => `- ${f.trim()}`).join("\n")}
 
 ## 🔗 GitHub
-${github || "Add your repo link here"}
-    `;
+[Repository](${github || "#"})
+  `;
 
-    preview.textContent = readme;
-  }
+  // Convert Markdown → HTML
+  document.getElementById("preview").innerHTML = marked.parse(markdown);
 
-  function copyReadme() {
-    navigator.clipboard.writeText(preview.textContent);
-    alert("README copied to clipboard!");
-  }
+  // Save for copy
+  window.generatedMarkdown = markdown;
+}
+
+function copyMarkdown() {
+  navigator.clipboard.writeText(window.generatedMarkdown || "");
+  alert("Markdown copied!");
+}
+
+// initial render
+update();
 </script>
 
 </body>
